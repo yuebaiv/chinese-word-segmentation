@@ -1,0 +1,1054 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>中文分词评估报告</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        h1, h2, h3 {
+            color: #333;
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin-bottom: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        .method-card {
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 15px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .method-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+        .method-name {
+            font-size: 18px;
+            font-weight: bold;
+        }
+        .method-metrics {
+            display: flex;
+            gap: 15px;
+        }
+        .metric {
+            text-align: center;
+        }
+        .metric-value {
+            font-size: 20px;
+            font-weight: bold;
+        }
+        .metric-label {
+            font-size: 12px;
+            color: #666;
+        }
+        .text-segment {
+            margin-bottom: 30px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 20px;
+        }
+        .segment-comparison {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        .word {
+            border: 1px solid #ddd;
+            padding: 3px 8px;
+            border-radius: 3px;
+            display: inline-block;
+            margin-right: 5px;
+            margin-bottom: 5px;
+        }
+        .correct {
+            background-color: #d4edda;
+            border-color: #c3e6cb;
+        }
+        .incorrect {
+            background-color: #f8d7da;
+            border-color: #f5c6cb;
+        }
+        .speed-bar {
+            height: 20px;
+            background-color: #007bff;
+            margin-bottom: 5px;
+        }
+        .tab {
+            overflow: hidden;
+            border: 1px solid #ccc;
+            background-color: #f1f1f1;
+        }
+        .tab button {
+            background-color: inherit;
+            float: left;
+            border: none;
+            outline: none;
+            cursor: pointer;
+            padding: 14px 16px;
+            transition: 0.3s;
+        }
+        .tab button:hover {
+            background-color: #ddd;
+        }
+        .tab button.active {
+            background-color: #ccc;
+        }
+        .tabcontent {
+            display: none;
+            padding: 6px 12px;
+            border: 1px solid #ccc;
+            border-top: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>中文分词评估报告</h1>
+        
+        <div class="tab">
+            <button class="tablinks active" onclick="openTab(event, 'Summary')">总体性能</button>
+            <button class="tablinks" onclick="openTab(event, 'Details')">详细评估</button>
+            <button class="tablinks" onclick="openTab(event, 'TextComparison')">文本对比</button>
+        </div>
+        
+        <div id="Summary" class="tabcontent" style="display:block;">
+            <h2>总体性能</h2>
+            <table>
+                <tr>
+                    <th>方法</th>
+                    <th>平均精确率</th>
+                    <th>平均召回率</th>
+                    <th>平均F1值</th>
+                    <th>F1标准差</th>
+                    <th>处理时间(秒)</th>
+                </tr>
+
+                <tr>
+                    <td>forward_max_match</td>
+                    <td>0.0000</td>
+                    <td>0.0000</td>
+                    <td>0.0000</td>
+                    <td>0.0000</td>
+                    <td>0.000000</td>
+                </tr>
+                <tr>
+                    <td>backward_max_match</td>
+                    <td>0.0000</td>
+                    <td>0.0000</td>
+                    <td>0.0000</td>
+                    <td>0.0000</td>
+                    <td>0.000000</td>
+                </tr>
+                <tr>
+                    <td>bidirection_max_match</td>
+                    <td>0.0000</td>
+                    <td>0.0000</td>
+                    <td>0.0000</td>
+                    <td>0.0000</td>
+                    <td>0.000000</td>
+                </tr>
+                <tr>
+                    <td>hmm</td>
+                    <td>0.0000</td>
+                    <td>0.0000</td>
+                    <td>0.0000</td>
+                    <td>0.0000</td>
+                    <td>0.001647</td>
+                </tr>
+                <tr>
+                    <td>jieba_default</td>
+                    <td>0.0261</td>
+                    <td>0.0396</td>
+                    <td>0.0312</td>
+                    <td>0.0565</td>
+                    <td>0.000000</td>
+                </tr>
+                <tr>
+                    <td>jieba_search</td>
+                    <td>0.0053</td>
+                    <td>0.0083</td>
+                    <td>0.0065</td>
+                    <td>0.0194</td>
+                    <td>0.000000</td>
+                </tr>
+            </table>
+            
+            <h3>速度对比</h3>
+            <div style="width: 100%;">
+
+                <div style="margin-bottom: 15px;">
+                    <div>forward: 0.000334秒</div>
+                    <div class="speed-bar" style="width: 20.29636065257264%;"></div>
+                </div>
+                <div style="margin-bottom: 15px;">
+                    <div>backward: 0.000333秒</div>
+                    <div class="speed-bar" style="width: 20.21913312095762%;"></div>
+                </div>
+                <div style="margin-bottom: 15px;">
+                    <div>bidirection: 0.000344秒</div>
+                    <div class="speed-bar" style="width: 20.90935418476687%;"></div>
+                </div>
+                <div style="margin-bottom: 15px;">
+                    <div>hmm: 0.001647秒</div>
+                    <div class="speed-bar" style="width: 100.0%;"></div>
+                </div>
+                <div style="margin-bottom: 15px;">
+                    <div>jieba: 0.000000秒</div>
+                    <div class="speed-bar" style="width: 0.0%;"></div>
+                </div>
+            </div>
+        </div>
+        
+        <div id="Details" class="tabcontent">
+            <h2>详细评估</h2>
+
+            <div class="method-card">
+                <div class="method-header">
+                    <div class="method-name">forward_max_match</div>
+                    <div class="method-metrics">
+                        <div class="metric">
+                            <div class="metric-value">0.0000</div>
+                            <div class="metric-label">精确率</div>
+                        </div>
+                        <div class="metric">
+                            <div class="metric-value">0.0000</div>
+                            <div class="metric-label">召回率</div>
+                        </div>
+                        <div class="metric">
+                            <div class="metric-value">0.0000</div>
+                            <div class="metric-label">F1值</div>
+                        </div>
+                        <div class="metric">
+                            <div class="metric-value">0.000000s</div>
+                            <div class="metric-label">处理时间</div>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <h4>各文本F1值</h4>
+                    <table>
+                        <tr>
+                            <th>文本ID</th>
+                            <th>F1值</th>
+                        </tr>
+                        <tr>
+                            <td>文本1</td>
+                            <td>0.0000</td>
+                        </tr>
+                        <tr>
+                            <td>文本2</td>
+                            <td>0.0000</td>
+                        </tr>
+                        <tr>
+                            <td>文本3</td>
+                            <td>0.0000</td>
+                        </tr>
+                        <tr>
+                            <td>文本4</td>
+                            <td>0.0000</td>
+                        </tr>
+                        <tr>
+                            <td>文本5</td>
+                            <td>0.0000</td>
+                        </tr>
+                        <tr>
+                            <td>文本6</td>
+                            <td>0.0000</td>
+                        </tr>
+                        <tr>
+                            <td>文本7</td>
+                            <td>0.0000</td>
+                        </tr>
+                        <tr>
+                            <td>文本8</td>
+                            <td>0.0000</td>
+                        </tr>
+                        <tr>
+                            <td>文本9</td>
+                            <td>0.0000</td>
+                        </tr>
+                        <tr>
+                            <td>文本10</td>
+                            <td>0.0000</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <div class="method-card">
+                <div class="method-header">
+                    <div class="method-name">backward_max_match</div>
+                    <div class="method-metrics">
+                        <div class="metric">
+                            <div class="metric-value">0.0000</div>
+                            <div class="metric-label">精确率</div>
+                        </div>
+                        <div class="metric">
+                            <div class="metric-value">0.0000</div>
+                            <div class="metric-label">召回率</div>
+                        </div>
+                        <div class="metric">
+                            <div class="metric-value">0.0000</div>
+                            <div class="metric-label">F1值</div>
+                        </div>
+                        <div class="metric">
+                            <div class="metric-value">0.000000s</div>
+                            <div class="metric-label">处理时间</div>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <h4>各文本F1值</h4>
+                    <table>
+                        <tr>
+                            <th>文本ID</th>
+                            <th>F1值</th>
+                        </tr>
+                        <tr>
+                            <td>文本1</td>
+                            <td>0.0000</td>
+                        </tr>
+                        <tr>
+                            <td>文本2</td>
+                            <td>0.0000</td>
+                        </tr>
+                        <tr>
+                            <td>文本3</td>
+                            <td>0.0000</td>
+                        </tr>
+                        <tr>
+                            <td>文本4</td>
+                            <td>0.0000</td>
+                        </tr>
+                        <tr>
+                            <td>文本5</td>
+                            <td>0.0000</td>
+                        </tr>
+                        <tr>
+                            <td>文本6</td>
+                            <td>0.0000</td>
+                        </tr>
+                        <tr>
+                            <td>文本7</td>
+                            <td>0.0000</td>
+                        </tr>
+                        <tr>
+                            <td>文本8</td>
+                            <td>0.0000</td>
+                        </tr>
+                        <tr>
+                            <td>文本9</td>
+                            <td>0.0000</td>
+                        </tr>
+                        <tr>
+                            <td>文本10</td>
+                            <td>0.0000</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <div class="method-card">
+                <div class="method-header">
+                    <div class="method-name">bidirection_max_match</div>
+                    <div class="method-metrics">
+                        <div class="metric">
+                            <div class="metric-value">0.0000</div>
+                            <div class="metric-label">精确率</div>
+                        </div>
+                        <div class="metric">
+                            <div class="metric-value">0.0000</div>
+                            <div class="metric-label">召回率</div>
+                        </div>
+                        <div class="metric">
+                            <div class="metric-value">0.0000</div>
+                            <div class="metric-label">F1值</div>
+                        </div>
+                        <div class="metric">
+                            <div class="metric-value">0.000000s</div>
+                            <div class="metric-label">处理时间</div>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <h4>各文本F1值</h4>
+                    <table>
+                        <tr>
+                            <th>文本ID</th>
+                            <th>F1值</th>
+                        </tr>
+                        <tr>
+                            <td>文本1</td>
+                            <td>0.0000</td>
+                        </tr>
+                        <tr>
+                            <td>文本2</td>
+                            <td>0.0000</td>
+                        </tr>
+                        <tr>
+                            <td>文本3</td>
+                            <td>0.0000</td>
+                        </tr>
+                        <tr>
+                            <td>文本4</td>
+                            <td>0.0000</td>
+                        </tr>
+                        <tr>
+                            <td>文本5</td>
+                            <td>0.0000</td>
+                        </tr>
+                        <tr>
+                            <td>文本6</td>
+                            <td>0.0000</td>
+                        </tr>
+                        <tr>
+                            <td>文本7</td>
+                            <td>0.0000</td>
+                        </tr>
+                        <tr>
+                            <td>文本8</td>
+                            <td>0.0000</td>
+                        </tr>
+                        <tr>
+                            <td>文本9</td>
+                            <td>0.0000</td>
+                        </tr>
+                        <tr>
+                            <td>文本10</td>
+                            <td>0.0000</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <div class="method-card">
+                <div class="method-header">
+                    <div class="method-name">hmm</div>
+                    <div class="method-metrics">
+                        <div class="metric">
+                            <div class="metric-value">0.0000</div>
+                            <div class="metric-label">精确率</div>
+                        </div>
+                        <div class="metric">
+                            <div class="metric-value">0.0000</div>
+                            <div class="metric-label">召回率</div>
+                        </div>
+                        <div class="metric">
+                            <div class="metric-value">0.0000</div>
+                            <div class="metric-label">F1值</div>
+                        </div>
+                        <div class="metric">
+                            <div class="metric-value">0.001647s</div>
+                            <div class="metric-label">处理时间</div>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <h4>各文本F1值</h4>
+                    <table>
+                        <tr>
+                            <th>文本ID</th>
+                            <th>F1值</th>
+                        </tr>
+                        <tr>
+                            <td>文本1</td>
+                            <td>0.0000</td>
+                        </tr>
+                        <tr>
+                            <td>文本2</td>
+                            <td>0.0000</td>
+                        </tr>
+                        <tr>
+                            <td>文本3</td>
+                            <td>0.0000</td>
+                        </tr>
+                        <tr>
+                            <td>文本4</td>
+                            <td>0.0000</td>
+                        </tr>
+                        <tr>
+                            <td>文本5</td>
+                            <td>0.0000</td>
+                        </tr>
+                        <tr>
+                            <td>文本6</td>
+                            <td>0.0000</td>
+                        </tr>
+                        <tr>
+                            <td>文本7</td>
+                            <td>0.0000</td>
+                        </tr>
+                        <tr>
+                            <td>文本8</td>
+                            <td>0.0000</td>
+                        </tr>
+                        <tr>
+                            <td>文本9</td>
+                            <td>0.0000</td>
+                        </tr>
+                        <tr>
+                            <td>文本10</td>
+                            <td>0.0000</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <div class="method-card">
+                <div class="method-header">
+                    <div class="method-name">jieba_default</div>
+                    <div class="method-metrics">
+                        <div class="metric">
+                            <div class="metric-value">0.0261</div>
+                            <div class="metric-label">精确率</div>
+                        </div>
+                        <div class="metric">
+                            <div class="metric-value">0.0396</div>
+                            <div class="metric-label">召回率</div>
+                        </div>
+                        <div class="metric">
+                            <div class="metric-value">0.0312</div>
+                            <div class="metric-label">F1值</div>
+                        </div>
+                        <div class="metric">
+                            <div class="metric-value">0.000000s</div>
+                            <div class="metric-label">处理时间</div>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <h4>各文本F1值</h4>
+                    <table>
+                        <tr>
+                            <th>文本ID</th>
+                            <th>F1值</th>
+                        </tr>
+                        <tr>
+                            <td>文本1</td>
+                            <td>0.0000</td>
+                        </tr>
+                        <tr>
+                            <td>文本2</td>
+                            <td>0.1818</td>
+                        </tr>
+                        <tr>
+                            <td>文本3</td>
+                            <td>0.0000</td>
+                        </tr>
+                        <tr>
+                            <td>文本4</td>
+                            <td>0.0000</td>
+                        </tr>
+                        <tr>
+                            <td>文本5</td>
+                            <td>0.0000</td>
+                        </tr>
+                        <tr>
+                            <td>文本6</td>
+                            <td>0.0000</td>
+                        </tr>
+                        <tr>
+                            <td>文本7</td>
+                            <td>0.0000</td>
+                        </tr>
+                        <tr>
+                            <td>文本8</td>
+                            <td>0.0000</td>
+                        </tr>
+                        <tr>
+                            <td>文本9</td>
+                            <td>0.0714</td>
+                        </tr>
+                        <tr>
+                            <td>文本10</td>
+                            <td>0.0588</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <div class="method-card">
+                <div class="method-header">
+                    <div class="method-name">jieba_search</div>
+                    <div class="method-metrics">
+                        <div class="metric">
+                            <div class="metric-value">0.0053</div>
+                            <div class="metric-label">精确率</div>
+                        </div>
+                        <div class="metric">
+                            <div class="metric-value">0.0083</div>
+                            <div class="metric-label">召回率</div>
+                        </div>
+                        <div class="metric">
+                            <div class="metric-value">0.0065</div>
+                            <div class="metric-label">F1值</div>
+                        </div>
+                        <div class="metric">
+                            <div class="metric-value">0.000000s</div>
+                            <div class="metric-label">处理时间</div>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <h4>各文本F1值</h4>
+                    <table>
+                        <tr>
+                            <th>文本ID</th>
+                            <th>F1值</th>
+                        </tr>
+                        <tr>
+                            <td>文本1</td>
+                            <td>0.0000</td>
+                        </tr>
+                        <tr>
+                            <td>文本2</td>
+                            <td>0.0000</td>
+                        </tr>
+                        <tr>
+                            <td>文本3</td>
+                            <td>0.0000</td>
+                        </tr>
+                        <tr>
+                            <td>文本4</td>
+                            <td>0.0000</td>
+                        </tr>
+                        <tr>
+                            <td>文本5</td>
+                            <td>0.0000</td>
+                        </tr>
+                        <tr>
+                            <td>文本6</td>
+                            <td>0.0000</td>
+                        </tr>
+                        <tr>
+                            <td>文本7</td>
+                            <td>0.0000</td>
+                        </tr>
+                        <tr>
+                            <td>文本8</td>
+                            <td>0.0000</td>
+                        </tr>
+                        <tr>
+                            <td>文本9</td>
+                            <td>0.0645</td>
+                        </tr>
+                        <tr>
+                            <td>文本10</td>
+                            <td>0.0000</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+        
+        <div id="TextComparison" class="tabcontent">
+            <h2>文本分词对比</h2>
+
+            <div class="text-segment">
+                <h3>文本1</h3>
+                <p><strong>原文:</strong> "我爱北京天安门",</p>
+                <p><strong>标准分词:</strong> ["我",|"爱",|"北京",|"天安门"],</p>
+                
+                <h4>各方法分词结果</h4>
+                <div>
+                    <p><strong>forward_max_match:</strong></p>
+                    <div class="segment-comparison"><span class="word incorrect">"</span><span class="word incorrect">我</span><span class="word incorrect">爱</span><span class="word incorrect">北京</span><span class="word incorrect">天</span><span class="word incorrect">安</span><span class="word incorrect">门</span><span class="word incorrect">"</span><span class="word incorrect">,</span>
+                    </div>
+                </div>
+                <div>
+                    <p><strong>backward_max_match:</strong></p>
+                    <div class="segment-comparison"><span class="word incorrect">"</span><span class="word incorrect">我</span><span class="word incorrect">爱</span><span class="word incorrect">北京</span><span class="word incorrect">天</span><span class="word incorrect">安</span><span class="word incorrect">门</span><span class="word incorrect">"</span><span class="word incorrect">,</span>
+                    </div>
+                </div>
+                <div>
+                    <p><strong>bidirection_max_match:</strong></p>
+                    <div class="segment-comparison"><span class="word incorrect">"</span><span class="word incorrect">我</span><span class="word incorrect">爱</span><span class="word incorrect">北京</span><span class="word incorrect">天</span><span class="word incorrect">安</span><span class="word incorrect">门</span><span class="word incorrect">"</span><span class="word incorrect">,</span>
+                    </div>
+                </div>
+                <div>
+                    <p><strong>hmm:</strong></p>
+                    <div class="segment-comparison"><span class="word incorrect">"我爱北京天安门",</span>
+                    </div>
+                </div>
+                <div>
+                    <p><strong>jieba_default:</strong></p>
+                    <div class="segment-comparison"><span class="word incorrect">"</span><span class="word incorrect">我</span><span class="word incorrect">爱</span><span class="word incorrect">北京</span><span class="word incorrect">天安门</span><span class="word incorrect">"</span><span class="word incorrect">,</span>
+                    </div>
+                </div>
+                <div>
+                    <p><strong>jieba_search:</strong></p>
+                    <div class="segment-comparison"><span class="word incorrect">"</span><span class="word incorrect">我</span><span class="word incorrect">爱</span><span class="word incorrect">北京</span><span class="word incorrect">天安</span><span class="word incorrect">天安门</span><span class="word incorrect">"</span><span class="word incorrect">,</span>
+                    </div>
+                </div>
+            </div>
+            <div class="text-segment">
+                <h3>文本2</h3>
+                <p><strong>原文:</strong> "中华人民共和国成立于一九四九年",</p>
+                <p><strong>标准分词:</strong> ["中华人民共和国",|"成立",|"于",|"一九四九年"],</p>
+                
+                <h4>各方法分词结果</h4>
+                <div>
+                    <p><strong>forward_max_match:</strong></p>
+                    <div class="segment-comparison"><span class="word incorrect">"</span><span class="word incorrect">中</span><span class="word incorrect">华</span><span class="word incorrect">人民</span><span class="word incorrect">共</span><span class="word incorrect">和</span><span class="word incorrect">国</span><span class="word incorrect">成</span><span class="word incorrect">立</span><span class="word incorrect">于</span><span class="word incorrect">一</span><span class="word incorrect">九</span><span class="word incorrect">四</span><span class="word incorrect">九</span><span class="word incorrect">年</span><span class="word incorrect">"</span><span class="word incorrect">,</span>
+                    </div>
+                </div>
+                <div>
+                    <p><strong>backward_max_match:</strong></p>
+                    <div class="segment-comparison"><span class="word incorrect">"</span><span class="word incorrect">中</span><span class="word incorrect">华</span><span class="word incorrect">人民</span><span class="word incorrect">共</span><span class="word incorrect">和</span><span class="word incorrect">国</span><span class="word incorrect">成</span><span class="word incorrect">立</span><span class="word incorrect">于</span><span class="word incorrect">一</span><span class="word incorrect">九</span><span class="word incorrect">四</span><span class="word incorrect">九</span><span class="word incorrect">年</span><span class="word incorrect">"</span><span class="word incorrect">,</span>
+                    </div>
+                </div>
+                <div>
+                    <p><strong>bidirection_max_match:</strong></p>
+                    <div class="segment-comparison"><span class="word incorrect">"</span><span class="word incorrect">中</span><span class="word incorrect">华</span><span class="word incorrect">人民</span><span class="word incorrect">共</span><span class="word incorrect">和</span><span class="word incorrect">国</span><span class="word incorrect">成</span><span class="word incorrect">立</span><span class="word incorrect">于</span><span class="word incorrect">一</span><span class="word incorrect">九</span><span class="word incorrect">四</span><span class="word incorrect">九</span><span class="word incorrect">年</span><span class="word incorrect">"</span><span class="word incorrect">,</span>
+                    </div>
+                </div>
+                <div>
+                    <p><strong>hmm:</strong></p>
+                    <div class="segment-comparison"><span class="word incorrect">"中华人民共和国成立于一九四九年",</span>
+                    </div>
+                </div>
+                <div>
+                    <p><strong>jieba_default:</strong></p>
+                    <div class="segment-comparison"><span class="word incorrect">"</span><span class="word incorrect">中华人民共和国</span><span class="word incorrect">成立</span><span class="word incorrect">于</span><span class="word incorrect">一九四九年</span><span class="word incorrect">"</span><span class="word incorrect">,</span>
+                    </div>
+                </div>
+                <div>
+                    <p><strong>jieba_search:</strong></p>
+                    <div class="segment-comparison"><span class="word incorrect">"</span><span class="word incorrect">中华</span><span class="word incorrect">华人</span><span class="word incorrect">人民</span><span class="word incorrect">共和</span><span class="word incorrect">共和国</span><span class="word incorrect">中华人民共和国</span><span class="word incorrect">成立</span><span class="word incorrect">于</span><span class="word incorrect">一九</span><span class="word incorrect">九四</span><span class="word incorrect">四九</span><span class="word incorrect">九年</span><span class="word incorrect">一九四</span><span class="word incorrect">四九年</span><span class="word incorrect">一九四九年</span><span class="word incorrect">"</span><span class="word incorrect">,</span>
+                    </div>
+                </div>
+            </div>
+            <div class="text-segment">
+                <h3>文本3</h3>
+                <p><strong>原文:</strong> "自然语言处理是人工智能的一个重要分支",</p>
+                <p><strong>标准分词:</strong> ["自然语言处理",|"是",|"人工智能",|"的",|"一个",|"重要",|"分支"],</p>
+                
+                <h4>各方法分词结果</h4>
+                <div>
+                    <p><strong>forward_max_match:</strong></p>
+                    <div class="segment-comparison"><span class="word incorrect">"</span><span class="word incorrect">自然语言处理</span><span class="word incorrect">是</span><span class="word incorrect">人工智能</span><span class="word incorrect">的</span><span class="word incorrect">一</span><span class="word incorrect">个</span><span class="word incorrect">重</span><span class="word incorrect">要</span><span class="word incorrect">分</span><span class="word incorrect">支</span><span class="word incorrect">"</span><span class="word incorrect">,</span>
+                    </div>
+                </div>
+                <div>
+                    <p><strong>backward_max_match:</strong></p>
+                    <div class="segment-comparison"><span class="word incorrect">"</span><span class="word incorrect">自然语言处理</span><span class="word incorrect">是</span><span class="word incorrect">人工智能</span><span class="word incorrect">的</span><span class="word incorrect">一</span><span class="word incorrect">个</span><span class="word incorrect">重</span><span class="word incorrect">要</span><span class="word incorrect">分</span><span class="word incorrect">支</span><span class="word incorrect">"</span><span class="word incorrect">,</span>
+                    </div>
+                </div>
+                <div>
+                    <p><strong>bidirection_max_match:</strong></p>
+                    <div class="segment-comparison"><span class="word incorrect">"</span><span class="word incorrect">自然语言处理</span><span class="word incorrect">是</span><span class="word incorrect">人工智能</span><span class="word incorrect">的</span><span class="word incorrect">一</span><span class="word incorrect">个</span><span class="word incorrect">重</span><span class="word incorrect">要</span><span class="word incorrect">分</span><span class="word incorrect">支</span><span class="word incorrect">"</span><span class="word incorrect">,</span>
+                    </div>
+                </div>
+                <div>
+                    <p><strong>hmm:</strong></p>
+                    <div class="segment-comparison"><span class="word incorrect">"自然语言处理是人工智能的一个重要分支",</span>
+                    </div>
+                </div>
+                <div>
+                    <p><strong>jieba_default:</strong></p>
+                    <div class="segment-comparison"><span class="word incorrect">"</span><span class="word incorrect">自然语言</span><span class="word incorrect">处理</span><span class="word incorrect">是</span><span class="word incorrect">人工智能</span><span class="word incorrect">的</span><span class="word incorrect">一个</span><span class="word incorrect">重要</span><span class="word incorrect">分支</span><span class="word incorrect">"</span><span class="word incorrect">,</span>
+                    </div>
+                </div>
+                <div>
+                    <p><strong>jieba_search:</strong></p>
+                    <div class="segment-comparison"><span class="word incorrect">"</span><span class="word incorrect">自然</span><span class="word incorrect">语言</span><span class="word incorrect">自然语言</span><span class="word incorrect">处理</span><span class="word incorrect">是</span><span class="word incorrect">人工</span><span class="word incorrect">智能</span><span class="word incorrect">人工智能</span><span class="word incorrect">的</span><span class="word incorrect">一个</span><span class="word incorrect">重要</span><span class="word incorrect">分支</span><span class="word incorrect">"</span><span class="word incorrect">,</span>
+                    </div>
+                </div>
+            </div>
+            <div class="text-segment">
+                <h3>文本4</h3>
+                <p><strong>原文:</strong> "高科技计算机网络信息技术的飞速发展促进了社会经济的腾飞",</p>
+                <p><strong>标准分词:</strong> ["高科技",|"计算机",|"网络",|"信息",|"技术",|"的",|"飞速",|"发展",|"促进",|"了",|"社会经济",|"的",|"腾飞"],</p>
+                
+                <h4>各方法分词结果</h4>
+                <div>
+                    <p><strong>forward_max_match:</strong></p>
+                    <div class="segment-comparison"><span class="word incorrect">"</span><span class="word incorrect">高</span><span class="word incorrect">科</span><span class="word incorrect">技</span><span class="word incorrect">计算机</span><span class="word incorrect">网</span><span class="word incorrect">络</span><span class="word incorrect">信</span><span class="word incorrect">息</span><span class="word incorrect">技术</span><span class="word incorrect">的</span><span class="word incorrect">飞</span><span class="word incorrect">速</span><span class="word incorrect">发展</span><span class="word incorrect">促</span><span class="word incorrect">进</span><span class="word incorrect">了</span><span class="word incorrect">社会</span><span class="word incorrect">经济</span><span class="word incorrect">的</span><span class="word incorrect">腾</span><span class="word incorrect">飞</span><span class="word incorrect">"</span><span class="word incorrect">,</span>
+                    </div>
+                </div>
+                <div>
+                    <p><strong>backward_max_match:</strong></p>
+                    <div class="segment-comparison"><span class="word incorrect">"</span><span class="word incorrect">高</span><span class="word incorrect">科</span><span class="word incorrect">技</span><span class="word incorrect">计算机</span><span class="word incorrect">网</span><span class="word incorrect">络</span><span class="word incorrect">信</span><span class="word incorrect">息</span><span class="word incorrect">技术</span><span class="word incorrect">的</span><span class="word incorrect">飞</span><span class="word incorrect">速</span><span class="word incorrect">发展</span><span class="word incorrect">促</span><span class="word incorrect">进</span><span class="word incorrect">了</span><span class="word incorrect">社会</span><span class="word incorrect">经济</span><span class="word incorrect">的</span><span class="word incorrect">腾</span><span class="word incorrect">飞</span><span class="word incorrect">"</span><span class="word incorrect">,</span>
+                    </div>
+                </div>
+                <div>
+                    <p><strong>bidirection_max_match:</strong></p>
+                    <div class="segment-comparison"><span class="word incorrect">"</span><span class="word incorrect">高</span><span class="word incorrect">科</span><span class="word incorrect">技</span><span class="word incorrect">计算机</span><span class="word incorrect">网</span><span class="word incorrect">络</span><span class="word incorrect">信</span><span class="word incorrect">息</span><span class="word incorrect">技术</span><span class="word incorrect">的</span><span class="word incorrect">飞</span><span class="word incorrect">速</span><span class="word incorrect">发展</span><span class="word incorrect">促</span><span class="word incorrect">进</span><span class="word incorrect">了</span><span class="word incorrect">社会</span><span class="word incorrect">经济</span><span class="word incorrect">的</span><span class="word incorrect">腾</span><span class="word incorrect">飞</span><span class="word incorrect">"</span><span class="word incorrect">,</span>
+                    </div>
+                </div>
+                <div>
+                    <p><strong>hmm:</strong></p>
+                    <div class="segment-comparison"><span class="word incorrect">"高科技计算机网络信息技术的飞速发展促进了社会经济的腾飞",</span>
+                    </div>
+                </div>
+                <div>
+                    <p><strong>jieba_default:</strong></p>
+                    <div class="segment-comparison"><span class="word incorrect">"</span><span class="word incorrect">高科技</span><span class="word incorrect">计算机网络</span><span class="word incorrect">信息技术</span><span class="word incorrect">的</span><span class="word incorrect">飞速发展</span><span class="word incorrect">促进</span><span class="word incorrect">了</span><span class="word incorrect">社会</span><span class="word incorrect">经济</span><span class="word incorrect">的</span><span class="word incorrect">腾飞</span><span class="word incorrect">"</span><span class="word incorrect">,</span>
+                    </div>
+                </div>
+                <div>
+                    <p><strong>jieba_search:</strong></p>
+                    <div class="segment-comparison"><span class="word incorrect">"</span><span class="word incorrect">科技</span><span class="word incorrect">高科技</span><span class="word incorrect">计算</span><span class="word incorrect">算机</span><span class="word incorrect">网络</span><span class="word incorrect">计算机</span><span class="word incorrect">计算机网络</span><span class="word incorrect">信息</span><span class="word incorrect">技术</span><span class="word incorrect">信息技术</span><span class="word incorrect">的</span><span class="word incorrect">飞速</span><span class="word incorrect">发展</span><span class="word incorrect">飞速发展</span><span class="word incorrect">促进</span><span class="word incorrect">了</span><span class="word incorrect">社会</span><span class="word incorrect">经济</span><span class="word incorrect">的</span><span class="word incorrect">腾飞</span><span class="word incorrect">"</span><span class="word incorrect">,</span>
+                    </div>
+                </div>
+            </div>
+            <div class="text-segment">
+                <h3>文本5</h3>
+                <p><strong>原文:</strong> "今天天气真好，我们一起去公园散步吧",</p>
+                <p><strong>标准分词:</strong> ["今天",|"天气",|"真",|"好",|"，",|"我们",|"一起",|"去",|"公园",|"散步",|"吧"],</p>
+                
+                <h4>各方法分词结果</h4>
+                <div>
+                    <p><strong>forward_max_match:</strong></p>
+                    <div class="segment-comparison"><span class="word incorrect">"</span><span class="word incorrect">今</span><span class="word incorrect">天</span><span class="word incorrect">天</span><span class="word incorrect">气</span><span class="word incorrect">真</span><span class="word incorrect">好</span><span class="word incorrect">，</span><span class="word incorrect">我</span><span class="word incorrect">们</span><span class="word incorrect">一</span><span class="word incorrect">起</span><span class="word incorrect">去</span><span class="word incorrect">公</span><span class="word incorrect">园</span><span class="word incorrect">散</span><span class="word incorrect">步</span><span class="word incorrect">吧</span><span class="word incorrect">"</span><span class="word incorrect">,</span>
+                    </div>
+                </div>
+                <div>
+                    <p><strong>backward_max_match:</strong></p>
+                    <div class="segment-comparison"><span class="word incorrect">"</span><span class="word incorrect">今</span><span class="word incorrect">天</span><span class="word incorrect">天</span><span class="word incorrect">气</span><span class="word incorrect">真</span><span class="word incorrect">好</span><span class="word incorrect">，</span><span class="word incorrect">我</span><span class="word incorrect">们</span><span class="word incorrect">一</span><span class="word incorrect">起</span><span class="word incorrect">去</span><span class="word incorrect">公</span><span class="word incorrect">园</span><span class="word incorrect">散</span><span class="word incorrect">步</span><span class="word incorrect">吧</span><span class="word incorrect">"</span><span class="word incorrect">,</span>
+                    </div>
+                </div>
+                <div>
+                    <p><strong>bidirection_max_match:</strong></p>
+                    <div class="segment-comparison"><span class="word incorrect">"</span><span class="word incorrect">今</span><span class="word incorrect">天</span><span class="word incorrect">天</span><span class="word incorrect">气</span><span class="word incorrect">真</span><span class="word incorrect">好</span><span class="word incorrect">，</span><span class="word incorrect">我</span><span class="word incorrect">们</span><span class="word incorrect">一</span><span class="word incorrect">起</span><span class="word incorrect">去</span><span class="word incorrect">公</span><span class="word incorrect">园</span><span class="word incorrect">散</span><span class="word incorrect">步</span><span class="word incorrect">吧</span><span class="word incorrect">"</span><span class="word incorrect">,</span>
+                    </div>
+                </div>
+                <div>
+                    <p><strong>hmm:</strong></p>
+                    <div class="segment-comparison"><span class="word incorrect">"今天天气真好，我们一起去公园散步吧",</span>
+                    </div>
+                </div>
+                <div>
+                    <p><strong>jieba_default:</strong></p>
+                    <div class="segment-comparison"><span class="word incorrect">"</span><span class="word incorrect">今天天气</span><span class="word incorrect">真</span><span class="word incorrect">好</span><span class="word incorrect">，</span><span class="word incorrect">我们</span><span class="word incorrect">一起</span><span class="word incorrect">去</span><span class="word incorrect">公园</span><span class="word incorrect">散步</span><span class="word incorrect">吧</span><span class="word incorrect">"</span><span class="word incorrect">,</span>
+                    </div>
+                </div>
+                <div>
+                    <p><strong>jieba_search:</strong></p>
+                    <div class="segment-comparison"><span class="word incorrect">"</span><span class="word incorrect">今天</span><span class="word incorrect">天天</span><span class="word incorrect">天气</span><span class="word incorrect">今天天气</span><span class="word incorrect">真</span><span class="word incorrect">好</span><span class="word incorrect">，</span><span class="word incorrect">我们</span><span class="word incorrect">一起</span><span class="word incorrect">去</span><span class="word incorrect">公园</span><span class="word incorrect">散步</span><span class="word incorrect">吧</span><span class="word incorrect">"</span><span class="word incorrect">,</span>
+                    </div>
+                </div>
+            </div>
+            <div class="text-segment">
+                <h3>文本6</h3>
+                <p><strong>原文:</strong> "这个问题我们需要深入研究才能得出结论",</p>
+                <p><strong>标准分词:</strong> ["这个",|"问题",|"我们",|"需要",|"深入",|"研究",|"才",|"能",|"得出",|"结论"],</p>
+                
+                <h4>各方法分词结果</h4>
+                <div>
+                    <p><strong>forward_max_match:</strong></p>
+                    <div class="segment-comparison"><span class="word incorrect">"</span><span class="word incorrect">这</span><span class="word incorrect">个</span><span class="word incorrect">问</span><span class="word incorrect">题</span><span class="word incorrect">我</span><span class="word incorrect">们</span><span class="word incorrect">需</span><span class="word incorrect">要</span><span class="word incorrect">深</span><span class="word incorrect">入</span><span class="word incorrect">研</span><span class="word incorrect">究</span><span class="word incorrect">才</span><span class="word incorrect">能</span><span class="word incorrect">得</span><span class="word incorrect">出</span><span class="word incorrect">结</span><span class="word incorrect">论</span><span class="word incorrect">"</span><span class="word incorrect">,</span>
+                    </div>
+                </div>
+                <div>
+                    <p><strong>backward_max_match:</strong></p>
+                    <div class="segment-comparison"><span class="word incorrect">"</span><span class="word incorrect">这</span><span class="word incorrect">个</span><span class="word incorrect">问</span><span class="word incorrect">题</span><span class="word incorrect">我</span><span class="word incorrect">们</span><span class="word incorrect">需</span><span class="word incorrect">要</span><span class="word incorrect">深</span><span class="word incorrect">入</span><span class="word incorrect">研</span><span class="word incorrect">究</span><span class="word incorrect">才</span><span class="word incorrect">能</span><span class="word incorrect">得</span><span class="word incorrect">出</span><span class="word incorrect">结</span><span class="word incorrect">论</span><span class="word incorrect">"</span><span class="word incorrect">,</span>
+                    </div>
+                </div>
+                <div>
+                    <p><strong>bidirection_max_match:</strong></p>
+                    <div class="segment-comparison"><span class="word incorrect">"</span><span class="word incorrect">这</span><span class="word incorrect">个</span><span class="word incorrect">问</span><span class="word incorrect">题</span><span class="word incorrect">我</span><span class="word incorrect">们</span><span class="word incorrect">需</span><span class="word incorrect">要</span><span class="word incorrect">深</span><span class="word incorrect">入</span><span class="word incorrect">研</span><span class="word incorrect">究</span><span class="word incorrect">才</span><span class="word incorrect">能</span><span class="word incorrect">得</span><span class="word incorrect">出</span><span class="word incorrect">结</span><span class="word incorrect">论</span><span class="word incorrect">"</span><span class="word incorrect">,</span>
+                    </div>
+                </div>
+                <div>
+                    <p><strong>hmm:</strong></p>
+                    <div class="segment-comparison"><span class="word incorrect">"这个问题我们需要深入研究才能得出结论",</span>
+                    </div>
+                </div>
+                <div>
+                    <p><strong>jieba_default:</strong></p>
+                    <div class="segment-comparison"><span class="word incorrect">"</span><span class="word incorrect">这个</span><span class="word incorrect">问题</span><span class="word incorrect">我们</span><span class="word incorrect">需要</span><span class="word incorrect">深入研究</span><span class="word incorrect">才能</span><span class="word incorrect">得出结论</span><span class="word incorrect">"</span><span class="word incorrect">,</span>
+                    </div>
+                </div>
+                <div>
+                    <p><strong>jieba_search:</strong></p>
+                    <div class="segment-comparison"><span class="word incorrect">"</span><span class="word incorrect">这个</span><span class="word incorrect">问题</span><span class="word incorrect">我们</span><span class="word incorrect">需要</span><span class="word incorrect">深入</span><span class="word incorrect">研究</span><span class="word incorrect">深入研究</span><span class="word incorrect">才能</span><span class="word incorrect">得出</span><span class="word incorrect">结论</span><span class="word incorrect">得出结论</span><span class="word incorrect">"</span><span class="word incorrect">,</span>
+                    </div>
+                </div>
+            </div>
+            <div class="text-segment">
+                <h3>文本7</h3>
+                <p><strong>原文:</strong> "北京大学是中国最著名的高等学府之一",</p>
+                <p><strong>标准分词:</strong> ["北京大学",|"是",|"中国",|"最",|"著名",|"的",|"高等",|"学府",|"之一"],</p>
+                
+                <h4>各方法分词结果</h4>
+                <div>
+                    <p><strong>forward_max_match:</strong></p>
+                    <div class="segment-comparison"><span class="word incorrect">"</span><span class="word incorrect">北京</span><span class="word incorrect">大</span><span class="word incorrect">学</span><span class="word incorrect">是</span><span class="word incorrect">中国</span><span class="word incorrect">最</span><span class="word incorrect">著</span><span class="word incorrect">名</span><span class="word incorrect">的</span><span class="word incorrect">高</span><span class="word incorrect">等</span><span class="word incorrect">学</span><span class="word incorrect">府</span><span class="word incorrect">之</span><span class="word incorrect">一</span><span class="word incorrect">"</span><span class="word incorrect">,</span>
+                    </div>
+                </div>
+                <div>
+                    <p><strong>backward_max_match:</strong></p>
+                    <div class="segment-comparison"><span class="word incorrect">"</span><span class="word incorrect">北京</span><span class="word incorrect">大</span><span class="word incorrect">学</span><span class="word incorrect">是</span><span class="word incorrect">中国</span><span class="word incorrect">最</span><span class="word incorrect">著</span><span class="word incorrect">名</span><span class="word incorrect">的</span><span class="word incorrect">高</span><span class="word incorrect">等</span><span class="word incorrect">学</span><span class="word incorrect">府</span><span class="word incorrect">之</span><span class="word incorrect">一</span><span class="word incorrect">"</span><span class="word incorrect">,</span>
+                    </div>
+                </div>
+                <div>
+                    <p><strong>bidirection_max_match:</strong></p>
+                    <div class="segment-comparison"><span class="word incorrect">"</span><span class="word incorrect">北京</span><span class="word incorrect">大</span><span class="word incorrect">学</span><span class="word incorrect">是</span><span class="word incorrect">中国</span><span class="word incorrect">最</span><span class="word incorrect">著</span><span class="word incorrect">名</span><span class="word incorrect">的</span><span class="word incorrect">高</span><span class="word incorrect">等</span><span class="word incorrect">学</span><span class="word incorrect">府</span><span class="word incorrect">之</span><span class="word incorrect">一</span><span class="word incorrect">"</span><span class="word incorrect">,</span>
+                    </div>
+                </div>
+                <div>
+                    <p><strong>hmm:</strong></p>
+                    <div class="segment-comparison"><span class="word incorrect">"北京大学是中国最著名的高等学府之一",</span>
+                    </div>
+                </div>
+                <div>
+                    <p><strong>jieba_default:</strong></p>
+                    <div class="segment-comparison"><span class="word incorrect">"</span><span class="word incorrect">北京大学</span><span class="word incorrect">是</span><span class="word incorrect">中国</span><span class="word incorrect">最</span><span class="word incorrect">著名</span><span class="word incorrect">的</span><span class="word incorrect">高等学府</span><span class="word incorrect">之一</span><span class="word incorrect">"</span><span class="word incorrect">,</span>
+                    </div>
+                </div>
+                <div>
+                    <p><strong>jieba_search:</strong></p>
+                    <div class="segment-comparison"><span class="word incorrect">"</span><span class="word incorrect">北京</span><span class="word incorrect">大学</span><span class="word incorrect">北京大学</span><span class="word incorrect">是</span><span class="word incorrect">中国</span><span class="word incorrect">最</span><span class="word incorrect">著名</span><span class="word incorrect">的</span><span class="word incorrect">高等</span><span class="word incorrect">学府</span><span class="word incorrect">高等学府</span><span class="word incorrect">之一</span><span class="word incorrect">"</span><span class="word incorrect">,</span>
+                    </div>
+                </div>
+            </div>
+            <div class="text-segment">
+                <h3>文本8</h3>
+                <p><strong>原文:</strong> "机器学习和深度学习是当前人工智能领域的热门技术",</p>
+                <p><strong>标准分词:</strong> ["机器学习",|"和",|"深度学习",|"是",|"当前",|"人工智能",|"领域",|"的",|"热门",|"技术"],</p>
+                
+                <h4>各方法分词结果</h4>
+                <div>
+                    <p><strong>forward_max_match:</strong></p>
+                    <div class="segment-comparison"><span class="word incorrect">"</span><span class="word incorrect">机器学习</span><span class="word incorrect">和</span><span class="word incorrect">深</span><span class="word incorrect">度</span><span class="word incorrect">学</span><span class="word incorrect">习</span><span class="word incorrect">是</span><span class="word incorrect">当</span><span class="word incorrect">前</span><span class="word incorrect">人工智能</span><span class="word incorrect">领</span><span class="word incorrect">域</span><span class="word incorrect">的</span><span class="word incorrect">热</span><span class="word incorrect">门</span><span class="word incorrect">技术</span><span class="word incorrect">"</span><span class="word incorrect">,</span>
+                    </div>
+                </div>
+                <div>
+                    <p><strong>backward_max_match:</strong></p>
+                    <div class="segment-comparison"><span class="word incorrect">"</span><span class="word incorrect">机器学习</span><span class="word incorrect">和</span><span class="word incorrect">深</span><span class="word incorrect">度</span><span class="word incorrect">学</span><span class="word incorrect">习</span><span class="word incorrect">是</span><span class="word incorrect">当</span><span class="word incorrect">前</span><span class="word incorrect">人工智能</span><span class="word incorrect">领</span><span class="word incorrect">域</span><span class="word incorrect">的</span><span class="word incorrect">热</span><span class="word incorrect">门</span><span class="word incorrect">技术</span><span class="word incorrect">"</span><span class="word incorrect">,</span>
+                    </div>
+                </div>
+                <div>
+                    <p><strong>bidirection_max_match:</strong></p>
+                    <div class="segment-comparison"><span class="word incorrect">"</span><span class="word incorrect">机器学习</span><span class="word incorrect">和</span><span class="word incorrect">深</span><span class="word incorrect">度</span><span class="word incorrect">学</span><span class="word incorrect">习</span><span class="word incorrect">是</span><span class="word incorrect">当</span><span class="word incorrect">前</span><span class="word incorrect">人工智能</span><span class="word incorrect">领</span><span class="word incorrect">域</span><span class="word incorrect">的</span><span class="word incorrect">热</span><span class="word incorrect">门</span><span class="word incorrect">技术</span><span class="word incorrect">"</span><span class="word incorrect">,</span>
+                    </div>
+                </div>
+                <div>
+                    <p><strong>hmm:</strong></p>
+                    <div class="segment-comparison"><span class="word incorrect">"机器学习和深度学习是当前人工智能领域的热门技术",</span>
+                    </div>
+                </div>
+                <div>
+                    <p><strong>jieba_default:</strong></p>
+                    <div class="segment-comparison"><span class="word incorrect">"</span><span class="word incorrect">机器</span><span class="word incorrect">学习</span><span class="word incorrect">和</span><span class="word incorrect">深度</span><span class="word incorrect">学习</span><span class="word incorrect">是</span><span class="word incorrect">当前</span><span class="word incorrect">人工智能</span><span class="word incorrect">领域</span><span class="word incorrect">的</span><span class="word incorrect">热门</span><span class="word incorrect">技术</span><span class="word incorrect">"</span><span class="word incorrect">,</span>
+                    </div>
+                </div>
+                <div>
+                    <p><strong>jieba_search:</strong></p>
+                    <div class="segment-comparison"><span class="word incorrect">"</span><span class="word incorrect">机器</span><span class="word incorrect">学习</span><span class="word incorrect">和</span><span class="word incorrect">深度</span><span class="word incorrect">学习</span><span class="word incorrect">是</span><span class="word incorrect">当前</span><span class="word incorrect">人工</span><span class="word incorrect">智能</span><span class="word incorrect">人工智能</span><span class="word incorrect">领域</span><span class="word incorrect">的</span><span class="word incorrect">热门</span><span class="word incorrect">技术</span><span class="word incorrect">"</span><span class="word incorrect">,</span>
+                    </div>
+                </div>
+            </div>
+            <div class="text-segment">
+                <h3>文本9</h3>
+                <p><strong>原文:</strong> "他说：\"我们要勇往直前，不畏艰难险阻！\""</p>
+                <p><strong>标准分词:</strong> ["他",|"说",|"：",|""",|"我们",|"要",|"勇往直前",|"，",|"不畏",|"艰难险阻",|"！",|"""],</p>
+                
+                <h4>各方法分词结果</h4>
+                <div>
+                    <p><strong>forward_max_match:</strong></p>
+                    <div class="segment-comparison"><span class="word incorrect">"</span><span class="word incorrect">他</span><span class="word incorrect">说</span><span class="word incorrect">：</span><span class="word incorrect">\</span><span class="word incorrect">"</span><span class="word incorrect">我</span><span class="word incorrect">们</span><span class="word incorrect">要</span><span class="word incorrect">勇</span><span class="word incorrect">往</span><span class="word incorrect">直</span><span class="word incorrect">前</span><span class="word incorrect">，</span><span class="word incorrect">不</span><span class="word incorrect">畏</span><span class="word incorrect">艰</span><span class="word incorrect">难</span><span class="word incorrect">险</span><span class="word incorrect">阻</span><span class="word incorrect">！</span><span class="word incorrect">\</span><span class="word incorrect">"</span><span class="word incorrect">"</span>
+                    </div>
+                </div>
+                <div>
+                    <p><strong>backward_max_match:</strong></p>
+                    <div class="segment-comparison"><span class="word incorrect">"</span><span class="word incorrect">他</span><span class="word incorrect">说</span><span class="word incorrect">：</span><span class="word incorrect">\</span><span class="word incorrect">"</span><span class="word incorrect">我</span><span class="word incorrect">们</span><span class="word incorrect">要</span><span class="word incorrect">勇</span><span class="word incorrect">往</span><span class="word incorrect">直</span><span class="word incorrect">前</span><span class="word incorrect">，</span><span class="word incorrect">不</span><span class="word incorrect">畏</span><span class="word incorrect">艰</span><span class="word incorrect">难</span><span class="word incorrect">险</span><span class="word incorrect">阻</span><span class="word incorrect">！</span><span class="word incorrect">\</span><span class="word incorrect">"</span><span class="word incorrect">"</span>
+                    </div>
+                </div>
+                <div>
+                    <p><strong>bidirection_max_match:</strong></p>
+                    <div class="segment-comparison"><span class="word incorrect">"</span><span class="word incorrect">他</span><span class="word incorrect">说</span><span class="word incorrect">：</span><span class="word incorrect">\</span><span class="word incorrect">"</span><span class="word incorrect">我</span><span class="word incorrect">们</span><span class="word incorrect">要</span><span class="word incorrect">勇</span><span class="word incorrect">往</span><span class="word incorrect">直</span><span class="word incorrect">前</span><span class="word incorrect">，</span><span class="word incorrect">不</span><span class="word incorrect">畏</span><span class="word incorrect">艰</span><span class="word incorrect">难</span><span class="word incorrect">险</span><span class="word incorrect">阻</span><span class="word incorrect">！</span><span class="word incorrect">\</span><span class="word incorrect">"</span><span class="word incorrect">"</span>
+                    </div>
+                </div>
+                <div>
+                    <p><strong>hmm:</strong></p>
+                    <div class="segment-comparison"><span class="word incorrect">"他说：\"我们要勇往直前，不畏艰难险阻！\""</span>
+                    </div>
+                </div>
+                <div>
+                    <p><strong>jieba_default:</strong></p>
+                    <div class="segment-comparison"><span class="word incorrect">"</span><span class="word incorrect">他</span><span class="word incorrect">说</span><span class="word incorrect">：</span><span class="word incorrect">\</span><span class="word incorrect">"</span><span class="word incorrect">我们</span><span class="word incorrect">要</span><span class="word incorrect">勇往直前</span><span class="word incorrect">，</span><span class="word incorrect">不畏</span><span class="word incorrect">艰难险阻</span><span class="word incorrect">！</span><span class="word incorrect">\</span><span class="word incorrect">"</span><span class="word incorrect">"</span>
+                    </div>
+                </div>
+                <div>
+                    <p><strong>jieba_search:</strong></p>
+                    <div class="segment-comparison"><span class="word incorrect">"</span><span class="word incorrect">他</span><span class="word incorrect">说</span><span class="word incorrect">：</span><span class="word incorrect">\</span><span class="word incorrect">"</span><span class="word incorrect">我们</span><span class="word incorrect">要</span><span class="word incorrect">勇往</span><span class="word incorrect">勇往直前</span><span class="word incorrect">，</span><span class="word incorrect">不畏</span><span class="word incorrect">艰难</span><span class="word incorrect">险阻</span><span class="word incorrect">艰难险阻</span><span class="word incorrect">！</span><span class="word incorrect">\</span><span class="word incorrect">"</span><span class="word incorrect">"</span>
+                    </div>
+                </div>
+            </div>
+            <div class="text-segment">
+                <h3>文本10</h3>
+                <p><strong>原文:</strong> "中国的改革开放政策促进了经济的快速发展和人民生活水平的提高"</p>
+                <p><strong>标准分词:</strong> ["中国",|"的",|"改革开放",|"政策",|"促进",|"了",|"经济",|"的",|"快速",|"发展",|"和",|"人民",|"生活",|"水平",|"的",|"提高"]</p>
+                
+                <h4>各方法分词结果</h4>
+                <div>
+                    <p><strong>forward_max_match:</strong></p>
+                    <div class="segment-comparison"><span class="word incorrect">"</span><span class="word incorrect">中国</span><span class="word incorrect">的</span><span class="word incorrect">改</span><span class="word incorrect">革</span><span class="word incorrect">开</span><span class="word incorrect">放</span><span class="word incorrect">政</span><span class="word incorrect">策</span><span class="word incorrect">促</span><span class="word incorrect">进</span><span class="word incorrect">了</span><span class="word incorrect">经济</span><span class="word incorrect">的</span><span class="word incorrect">快</span><span class="word incorrect">速</span><span class="word incorrect">发展</span><span class="word incorrect">和</span><span class="word incorrect">人民</span><span class="word incorrect">生</span><span class="word incorrect">活</span><span class="word incorrect">水</span><span class="word incorrect">平</span><span class="word incorrect">的</span><span class="word incorrect">提</span><span class="word incorrect">高</span><span class="word incorrect">"</span>
+                    </div>
+                </div>
+                <div>
+                    <p><strong>backward_max_match:</strong></p>
+                    <div class="segment-comparison"><span class="word incorrect">"</span><span class="word incorrect">中国</span><span class="word incorrect">的</span><span class="word incorrect">改</span><span class="word incorrect">革</span><span class="word incorrect">开</span><span class="word incorrect">放</span><span class="word incorrect">政</span><span class="word incorrect">策</span><span class="word incorrect">促</span><span class="word incorrect">进</span><span class="word incorrect">了</span><span class="word incorrect">经济</span><span class="word incorrect">的</span><span class="word incorrect">快</span><span class="word incorrect">速</span><span class="word incorrect">发展</span><span class="word incorrect">和</span><span class="word incorrect">人民</span><span class="word incorrect">生</span><span class="word incorrect">活</span><span class="word incorrect">水</span><span class="word incorrect">平</span><span class="word incorrect">的</span><span class="word incorrect">提</span><span class="word incorrect">高</span><span class="word incorrect">"</span>
+                    </div>
+                </div>
+                <div>
+                    <p><strong>bidirection_max_match:</strong></p>
+                    <div class="segment-comparison"><span class="word incorrect">"</span><span class="word incorrect">中国</span><span class="word incorrect">的</span><span class="word incorrect">改</span><span class="word incorrect">革</span><span class="word incorrect">开</span><span class="word incorrect">放</span><span class="word incorrect">政</span><span class="word incorrect">策</span><span class="word incorrect">促</span><span class="word incorrect">进</span><span class="word incorrect">了</span><span class="word incorrect">经济</span><span class="word incorrect">的</span><span class="word incorrect">快</span><span class="word incorrect">速</span><span class="word incorrect">发展</span><span class="word incorrect">和</span><span class="word incorrect">人民</span><span class="word incorrect">生</span><span class="word incorrect">活</span><span class="word incorrect">水</span><span class="word incorrect">平</span><span class="word incorrect">的</span><span class="word incorrect">提</span><span class="word incorrect">高</span><span class="word incorrect">"</span>
+                    </div>
+                </div>
+                <div>
+                    <p><strong>hmm:</strong></p>
+                    <div class="segment-comparison"><span class="word incorrect">"中国的改革开放政策促进了经济的快速发展和人民生活水平的提高"</span>
+                    </div>
+                </div>
+                <div>
+                    <p><strong>jieba_default:</strong></p>
+                    <div class="segment-comparison"><span class="word incorrect">"</span><span class="word incorrect">中国</span><span class="word incorrect">的</span><span class="word incorrect">改革</span><span class="word incorrect">开放政策</span><span class="word incorrect">促进</span><span class="word incorrect">了</span><span class="word incorrect">经济</span><span class="word incorrect">的</span><span class="word incorrect">快速</span><span class="word incorrect">发展</span><span class="word incorrect">和</span><span class="word incorrect">人民</span><span class="word incorrect">生活</span><span class="word incorrect">水平</span><span class="word incorrect">的</span><span class="word incorrect">提高</span><span class="word incorrect">"</span>
+                    </div>
+                </div>
+                <div>
+                    <p><strong>jieba_search:</strong></p>
+                    <div class="segment-comparison"><span class="word incorrect">"</span><span class="word incorrect">中国</span><span class="word incorrect">的</span><span class="word incorrect">改革</span><span class="word incorrect">开放</span><span class="word incorrect">政策</span><span class="word incorrect">开放政策</span><span class="word incorrect">促进</span><span class="word incorrect">了</span><span class="word incorrect">经济</span><span class="word incorrect">的</span><span class="word incorrect">快速</span><span class="word incorrect">发展</span><span class="word incorrect">和</span><span class="word incorrect">人民</span><span class="word incorrect">生活</span><span class="word incorrect">水平</span><span class="word incorrect">的</span><span class="word incorrect">提高</span><span class="word incorrect">"</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <script>
+        function openTab(evt, tabName) {
+            var i, tabcontent, tablinks;
+            tabcontent = document.getElementsByClassName("tabcontent");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].style.display = "none";
+            }
+            tablinks = document.getElementsByClassName("tablinks");
+            for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].className = tablinks[i].className.replace(" active", "");
+            }
+            document.getElementById(tabName).style.display = "block";
+            evt.currentTarget.className += " active";
+        }
+        </script>
+    </div>
+</body>
+</html>
